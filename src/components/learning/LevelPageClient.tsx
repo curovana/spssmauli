@@ -36,18 +36,20 @@ export function LevelPageClient({ topic, level }: { topic: TopicModule; level: L
 
       <ConceptCard title={level.title} explanation={level.plainEnglishExplanation} visualSummary={level.visualSummary} />
 
-      {level.sourceRef ? (
-        <div className="inline-flex w-fit items-start gap-2 rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-950">
-          <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" aria-hidden="true" />
-          <span>Mapped to: {level.sourceRef}</span>
-        </div>
-      ) : null}
+      <section className="grid gap-3 md:grid-cols-5">
+        {["Recognise the wording", "Find outcome", "Choose move", "Read output", "Answer"].map((step, index) => (
+          <div key={step} className="rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-3">
+            <p className="text-xs font-semibold uppercase tracking-normal text-indigo-700">Step {index + 1}</p>
+            <p className="mt-1 text-sm font-semibold text-indigo-950">{step}</p>
+          </div>
+        ))}
+      </section>
 
-      <section className="grid gap-4 lg:grid-cols-[0.8fr_1fr]">
+      <section className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-2">
             <ListChecks className="h-5 w-5 text-indigo-600" aria-hidden="true" />
-            <h2 className="text-lg font-semibold text-slate-950">Key Rules</h2>
+            <h2 className="text-lg font-semibold text-slate-950">Rules to Remember</h2>
           </div>
           <ul className="mt-4 grid gap-2">
             {level.keyRules.map((rule) => (
@@ -142,6 +144,15 @@ export function LevelPageClient({ topic, level }: { topic: TopicModule; level: L
             </Link>
           )}
         </div>
+        {level.sourceRef ? (
+          <details className="mt-5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+            <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-600">
+              <BookOpen className="h-4 w-4 text-indigo-600" aria-hidden="true" />
+              Source mapping
+            </summary>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{level.sourceRef}</p>
+          </details>
+        ) : null}
       </section>
     </div>
   );

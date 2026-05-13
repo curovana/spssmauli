@@ -1,8 +1,7 @@
-import { pdfCourseTopics } from "@/content/topics/pdf-course-topics";
-import { topic10BinaryLogisticRegression } from "@/content/topics/topic-10-binary-logistic-regression";
+import { overhauledCourseTopics } from "@/content/topics/overhauled-course-topics";
 import type { TopicModule } from "@/types/learning";
 
-export const topics: TopicModule[] = [...pdfCourseTopics, topic10BinaryLogisticRegression];
+export const topics: TopicModule[] = overhauledCourseTopics;
 
 export function getTopicById(topicId: string) {
   return topics.find((topic) => topic.id === topicId);

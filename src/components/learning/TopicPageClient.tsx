@@ -1,30 +1,44 @@
 "use client";
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 import type { TopicModule } from "@/types/learning";
-import { BookMarked, ClipboardCheck, ListChecks, Table2, Workflow } from "lucide-react";
+import { ArrowRight, BookMarked, ClipboardCheck, ListChecks, Table2, Workflow } from "lucide-react";
 import { getTopicProgress, useProgress } from "@/lib/progress";
 import { TopicMap } from "@/components/learning/TopicMap";
-import { ExamRescueWorkflow } from "@/components/learning/ExamRescueWorkflow";
 import { ProgressRing } from "@/components/progress/ProgressRing";
 import { SPSSWorkflowCard } from "@/components/spss/SPSSWorkflowCard";
-import { TestSelectionCard } from "@/components/learning/TestSelectionCard";
 
 export function TopicPageClient({ topic }: { topic: TopicModule }) {
   const progress = useProgress();
 
   const completedLevels = progress.completedLevels[topic.id] ?? [];
   const topicProgress = getTopicProgress(progress, topic.id, topic.levels.length);
+  const firstIncompleteLevel = topic.levels.find((level) => !completedLevels.includes(level.id)) ?? topic.levels[0];
 
   return (
     <div className="grid gap-6 pb-20 md:pb-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm font-semibold text-indigo-600">Preloaded Topic Module</p>
+            <p className="text-sm font-semibold text-indigo-600">Standalone revision module</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{topic.title}</h1>
             <p className="mt-2 text-lg text-slate-600">{topic.subtitle}</p>
             <p className="mt-4 max-w-4xl text-sm leading-6 text-slate-600">{topic.examRelevance}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href={`/topics/${topic.id}/levels/${firstIncompleteLevel.id}`}
+                className="inline-flex h-11 items-center gap-2 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-700"
+              >
+                Start 20-minute revision <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/practice"
+                className="inline-flex h-11 items-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Mixed practice
+              </Link>
+            </div>
           </div>
           <ProgressRing percent={topicProgress.percent} label={`${topicProgress.completed}/${topicProgress.total}`} />
         </div>
@@ -32,16 +46,9 @@ export function TopicPageClient({ topic }: { topic: TopicModule }) {
 
       {topic.lastDayRevision ? <LastDayRevisionPanel topic={topic} /> : null}
 
-      <section>
-        <h2 className="text-xl font-semibold text-slate-950">Level Path</h2>
-        <div className="mt-4">
-          <TopicMap topicId={topic.id} levels={topic.levels} completedLevels={completedLevels} />
-        </div>
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-[0.8fr_1fr]">
+      <section className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-950">Topic Cheat Sheet</h2>
+          <h2 className="text-lg font-semibold text-slate-950">Short Cheat Sheet</h2>
           <div className="mt-4 grid gap-4">
             {topic.cheatSheet.map((section) => (
               <div key={section.id} className="rounded-lg bg-slate-50 p-4">
@@ -59,7 +66,6 @@ export function TopicPageClient({ topic }: { topic: TopicModule }) {
         </div>
 
         <div className="grid gap-4">
-          <TestSelectionCard workflows={topic.spssWorkflows} />
           {topic.commonTraps.map((trap) => (
             <div key={trap.id} className="rounded-lg border border-amber-200 bg-amber-50 p-4">
               <p className="text-sm font-semibold text-amber-950">{trap.trap}</p>
@@ -69,10 +75,15 @@ export function TopicPageClient({ topic }: { topic: TopicModule }) {
         </div>
       </section>
 
-      <ExamRescueWorkflow />
+      <section>
+        <h2 className="text-xl font-semibold text-slate-950">Revision Path</h2>
+        <div className="mt-4">
+          <TopicMap topicId={topic.id} levels={topic.levels} completedLevels={completedLevels} />
+        </div>
+      </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-slate-950">SPSS Workflows</h2>
+        <h2 className="text-xl font-semibold text-slate-950">SPSS Moves</h2>
         <div className="mt-4 grid gap-4">
           {topic.spssWorkflows.map((workflow) => (
             <SPSSWorkflowCard key={workflow.id} workflow={workflow} />
@@ -80,11 +91,8 @@ export function TopicPageClient({ topic }: { topic: TopicModule }) {
         </div>
       </section>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-950">Source PDFs</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
-          These are the lecture files used as the source for this module.
-        </p>
+      <details className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-700">Source PDFs used for traceability</summary>
         <div className="mt-4 grid gap-2 md:grid-cols-2">
           {topic.sourcePdfs.map((source) => (
             <div key={`${source.fileName}-${source.topicPart}`} className="rounded-lg bg-slate-50 px-3 py-2">
@@ -94,7 +102,7 @@ export function TopicPageClient({ topic }: { topic: TopicModule }) {
             </div>
           ))}
         </div>
-      </section>
+      </details>
     </div>
   );
 }
