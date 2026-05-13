@@ -1,6 +1,12 @@
 import { notFound } from "next/navigation";
 import { TopicPageClient } from "@/components/learning/TopicPageClient";
-import { getTopicById } from "@/content/topics";
+import { getTopicById, topics } from "@/content/topics";
+
+export function generateStaticParams() {
+  return topics.map((topic) => ({
+    topicId: topic.id,
+  }));
+}
 
 export default async function TopicPage({ params }: { params: Promise<{ topicId: string }> }) {
   const { topicId } = await params;
