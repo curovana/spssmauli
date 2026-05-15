@@ -213,6 +213,7 @@ export function SPSSGuidePage() {
         workflow.menuPath.join(" "),
         workflow.useWhen.join(" "),
         workflow.variables.join(" "),
+        workflow.output.join(" "),
         workflow.report.join(" "),
         workflow.examSentence,
       ]
