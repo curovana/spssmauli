@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AlertCircle, ArrowRight, Clock, ClipboardCheck, FileText, Target, TimerReset } from "lucide-react";
+import { AlertCircle, ArrowRight, Clock, ClipboardCheck, FileText, Target, TimerReset, Workflow } from "lucide-react";
 import type { TopicModule } from "@/types/learning";
 import { getRecentMistakes, getTopicProgress, getWeakAreas, resetProgress, useProgress } from "@/lib/progress";
 import { getNextLevel } from "@/lib/topicEngine";
@@ -37,7 +37,7 @@ export function DashboardClient({ topics }: { topics: TopicModule[] }) {
             <ProgressRing percent={coursePercent} label="Course" />
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <Link
               href={`/topics/${nextTopic.id}/levels/${nextLevel.id}`}
               className="rounded-lg bg-indigo-600 p-4 text-white transition hover:bg-indigo-700"
@@ -55,6 +55,11 @@ export function DashboardClient({ topics }: { topics: TopicModule[] }) {
               <Clock className="h-5 w-5 text-indigo-600" aria-hidden="true" />
               <p className="mt-3 text-sm font-semibold text-slate-950">Mock exam</p>
               <p className="mt-1 text-sm text-slate-600">Timed practical questions</p>
+            </Link>
+            <Link href="/spss-guide" className="rounded-lg border border-indigo-200 bg-indigo-50 p-4 transition hover:bg-white">
+              <Workflow className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+              <p className="mt-3 text-sm font-semibold text-slate-950">SPSS mega sheet</p>
+              <p className="mt-1 text-sm text-slate-600">All click paths in one page</p>
             </Link>
           </div>
         </div>
