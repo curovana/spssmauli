@@ -27,3 +27,30 @@ a {
   background: #c7d2fe;
   color: #1e1b4b;
 }
+
+@media print {
+  header,
+  nav,
+  aside,
+  .print\:hidden {
+    display: none !important;
+  }
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  body {
+    background: white !important;
+  }
+  article,
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}
